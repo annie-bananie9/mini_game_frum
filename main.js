@@ -20,7 +20,7 @@ const script = [
   { name: "DEMO", text: "데모:\n자원/지표가 있고, 매 턴 액션을 선택하면 숫자가 변한다." },
   { name: "SYSTEM", text: "원하면 여기에 이미지/사운드도 붙일 수 있어.\n(8-bit BGM 같은 거!)" },
   { name: "SYSTEM", text: "끝!\nA를 누르면 처음으로 돌아갈게.", goto: 0 },
-  [
+
   { "name": "SYSTEM", "text": "★ OFFICEMON WORLD ★\n신입 트레이너가 나타났다!" },
   { "name": "신입 트레이너(너)", "text": "나… 출근 3일차인데…\n이미 배틀이 시작되는 건가…?" },
 
