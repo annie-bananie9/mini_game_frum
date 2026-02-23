@@ -2,41 +2,62 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Micro Pokémon-style Dialog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KIA CXJ Quest (Web)</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- 픽셀 폰트 느낌: 시스템 폰트로도 가능하지만, 감성은 폰트가 큼 -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
-  <main class="frame" aria-label="game screen">
-    <section class="screen">
-      <div class="scene">
-        <div class="title">PROJECT MON</div>
-        <div class="hint">A: Next · B: Back · ⌨ Enter/Space 가능</div>
+  <main class="frame">
+    <header class="topbar">
+      <div class="logo">KIA CXJ QUEST</div>
+      <div class="hint">키: 1/2/3 선택 · Enter 진행 · R 재시작</div>
+    </header>
+
+    <section class="screen" aria-label="Game Screen">
+      <!-- 플레이 영역 -->
+      <div class="playfield">
+        <div class="stageInfo">
+          <div id="stageTitle" class="stageTitle">INTRO</div>
+          <div id="stageSub" class="stageSub">Onboarding</div>
+        </div>
+
+        <!-- Placeholder sprites -->
+        <div class="sprite leader" id="spriteLeader">
+          <div class="spriteLabel">이사님</div>
+        </div>
+        <div class="sprite trainer hidden" id="spriteTrainer">
+          <div class="spriteLabel">신입</div>
+        </div>
+
+        <!-- 상태 배너 -->
+        <div id="banner" class="banner hidden"></div>
       </div>
 
-      <div class="dialog" role="dialog" aria-live="polite">
-        <div class="dialog-inner">
-          <div class="name" id="name"></div>
-          <div class="text" id="text"></div>
+      <!-- 대사창 -->
+      <div class="dialogue">
+        <div class="name" id="name">SYSTEM</div>
+        <div class="text" id="text">로딩중…</div>
 
-          <div class="choices" id="choices" hidden></div>
+        <!-- 선택지 -->
+        <div class="choices" id="choices"></div>
 
-          <div class="footer">
-            <div class="controls">
-              <button id="btnB" class="btn secondary">B</button>
-              <button id="btnA" class="btn primary">A</button>
-            </div>
-            <div class="cursor" id="cursor" aria-hidden="true">▶</div>
-          </div>
+        <div class="controls">
+          <button id="btnEnter" class="btn">Enter (다음)</button>
+          <button id="btnR" class="btn">R (재시작)</button>
         </div>
+
+        <footer class="footnote">
+          <!--
+            CONTEST NOTE:
+            - 본 프로젝트는 생성형 AI를 활용해 제작되었고, 프롬프트는 PROMPTS.md에 기록합니다.
+            - 실행/배포 증빙: GitHub 커밋 + Pages 링크 + 실행 화면 캡처.
+          -->
+          <span id="footHint">ENTER로 진행하세요.</span>
+        </footer>
       </div>
     </section>
   </main>
 
-  <script src="main.js"></script>
+  <script src="game.js"></script>
 </body>
 </html>
