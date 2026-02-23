@@ -5,10 +5,16 @@ const btnA = document.getElementById("btnA");
 const btnB = document.getElementById("btnB");
 const btnC = document.getElementById("btnC");
 
+// 안전장치: HTML id가 안 맞으면 여기서 바로 알려줌
+if (!nameEl || !textEl || !btnA || !btnB || !btnC) {
+  throw new Error("HTML 요소(id)가 누락됨: name/text/btnA/btnB/btnC 확인 필요");
+}
+
 // ====== GAME STATE ======
 let life = 2;
 let stageIndex = 0;
 let mode = "intro"; // intro | stage | result | gameover | clear
+let introIndex = 0;
 
 // ====== SCRIPT ======
 const intro = [
@@ -23,7 +29,7 @@ const intro = [
   { name: "프로젝트 리더", text: "말로만 하면 안 된다.\n직접 '고객'이 되어라." },
   { name: "SYSTEM", text: "⚡ 배틀 준비!\n딜러십 던전이 열렸다!" },
   { name: "SYSTEM", text: "RULE: LIFE=2\n틀리면 LIFE -1\nLIFE=0이면 탈락!" },
-  { name: "SYSTEM", text: "자… 시작한다!\n(아래 A/B/C로 선택!)" }
+  { name: "SYSTEM", text: "자… 시작한다!\n(A/B/C로 선택!)" }
 ];
 
 const stages = [
@@ -51,7 +57,7 @@ const stages = [
   },
   {
     title: "STAGE 3: 시승의 초원 (시승/니즈 파악)",
-    prompt: "고객은 ‘나한테 맞는지’가 궁금하다!",
+    prompt: "고객은 '나한테 맞는지'가 궁금하다!",
     choices: {
       A: "사용 시나리오 질문 후 시승 동선 설계",
       B: "스펙을 30분 내내 읊는다",
@@ -84,11 +90,10 @@ const stages = [
   }
 ];
 
-// ====== RENDER ======
-let introIndex = 0;
-
+// ====== UI ======
 function headerLine() {
-  return `LIFE: ${"❤️".repeat(life)}${"🖤".repeat(2 - life)}\n`;
+  const hearts = "❤️".repeat(life) + "🖤".repeat(2 - life);
+  return `LIFE: ${hearts}\n\n`;
 }
 
 function showIntro() {
@@ -111,19 +116,15 @@ function showStage() {
 
 function showResult(isCorrect, picked) {
   const s = stages[stageIndex];
-  nameEl.innerText = isCorrect ? "SYSTEM" : "SYSTEM";
+  nameEl.innerText = "SYSTEM";
   if (isCorrect) {
     textEl.innerText =
       headerLine() +
-      `정답! (${picked})\n` +
-      "경험치 +1!\n\n" +
-      "(아무 키나 눌러 다음 스테이지로)";
+      `정답! (${picked})\n경험치 +1!\n\n(아무 키나 눌러 다음 스테이지로)`;
   } else {
     textEl.innerText =
       headerLine() +
-      `오답… (${picked})\n` +
-      s.wrongText +
-      "\n\n(아무 키나 눌러 계속…)";
+      `오답… (${picked})\n${s.wrongText}\n\n(아무 키나 눌러 계속…)`;
   }
 }
 
@@ -141,11 +142,11 @@ function showClear() {
   textEl.innerText =
     "🎉 CLEAR! 🎉\n" +
     "CXJ 던전을 통과했다!\n\n" +
-    "프로젝트 리더: \"좋아.\n이제 너의 CXJ를 문서로 진화시켜라.\"\n\n" +
+    "프로젝트 리더: \"좋아. 이제 CXJ를 문서로 진화시켜라.\"\n\n" +
     "A/B/C 아무거나 눌러 다시 시작";
 }
 
-// ====== INPUT HANDLER ======
+// ====== GAME LOOP ======
 function handlePress(choice) {
   if (mode === "intro") {
     introIndex++;
@@ -160,12 +161,10 @@ function handlePress(choice) {
 
   if (mode === "stage") {
     const s = stages[stageIndex];
-    const picked = choice; // "A" | "B" | "C"
+    const picked = choice;
     const isCorrect = picked === s.correct;
 
-    if (!isCorrect) {
-      life -= 1;
-    }
+    if (!isCorrect) life -= 1;
 
     if (life <= 0) {
       mode = "gameover";
@@ -179,7 +178,6 @@ function handlePress(choice) {
   }
 
   if (mode === "result") {
-    // 다음 스테이지로
     stageIndex++;
     if (stageIndex >= stages.length) {
       mode = "clear";
@@ -192,7 +190,7 @@ function handlePress(choice) {
   }
 
   if (mode === "gameover" || mode === "clear") {
-    // 리셋
+    // reset
     life = 2;
     stageIndex = 0;
     introIndex = 0;
@@ -201,22 +199,21 @@ function handlePress(choice) {
   }
 }
 
-// 버튼 이벤트
+// 버튼
 btnA.addEventListener("click", () => handlePress("A"));
 btnB.addEventListener("click", () => handlePress("B"));
 btnC.addEventListener("click", () => handlePress("C"));
 
-// 키보드: A/B/C 키로도 선택 가능
+// 키보드
 window.addEventListener("keydown", (e) => {
   const k = e.key.toLowerCase();
   if (k === "a") handlePress("A");
   if (k === "b") handlePress("B");
   if (k === "c") handlePress("C");
-  // Enter/Space도 진행(편의): intro/result/gameover/clear에서만
   if ((e.key === "Enter" || e.key === " ") && mode !== "stage") {
     handlePress("A");
   }
 });
 
-// 시작
+// start
 showIntro();
